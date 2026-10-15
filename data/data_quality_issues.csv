@@ -1,0 +1,25 @@
+ticket_id,issue
+RITM0000604,Missing priority
+INC0000657,Missing priority
+INC0000816,Missing priority
+INC0001202,Missing priority
+RITM0001433,Missing priority
+RITM0001589,Missing priority
+RITM0001728,Missing priority
+RITM0001789,Missing priority
+INC0000089,Missing description
+INC0000653,Missing description
+RITM0001087,Missing description
+RITM0001426,Missing description
+RITM0001472,Missing description
+INC0001956,Missing description
+INC0000675,Duplicate ticket ID
+INC0001700,Duplicate ticket ID
+RITM0001283,Duplicate ticket ID
+INC0001316,Duplicate ticket ID
+RITM0001211,Duplicate ticket ID
+RITM0000486,Resolved before created
+INC0000899,Resolved before created
+RITM0000961,Resolved before created
+INC0001481,Resolved before created
+INC0001711,Resolved before created
