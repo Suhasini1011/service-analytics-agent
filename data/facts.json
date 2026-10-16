@@ -1,0 +1,51 @@
+{
+  "data_quality_notes": [
+    "5 duplicate tickets removed",
+    "5 tickets with impossible dates excluded from resolution-time KPIs",
+    "8 tickets with no priority excluded from SLA by priority",
+    "6 tickets with no description will be labelled Unclassified"
+  ],
+  "total_tickets": 2000,
+  "sla_attainment_pct_by_priority": {
+    "P1": 81.1,
+    "P2": 82.1,
+    "P3": 81.8,
+    "P4": 73.4
+  },
+  "sla_attainment_goal_pct": 95,
+  "sla_target_hours_by_priority": {
+    "P1": 4,
+    "P2": 24,
+    "P3": 72,
+    "P4": 120
+  },
+  "median_hours_to_resolve_by_priority": {
+    "P1": 1.8,
+    "P2": 8.9,
+    "P3": 28.2,
+    "P4": 62.6
+  },
+  "mean_hours_to_resolve_by_priority": {
+    "P1": 2.4,
+    "P2": 14.0,
+    "P3": 44.2,
+    "P4": 89.1
+  },
+  "open_backlog_total": 27,
+  "open_tickets_older_than_14_days": 1,
+  "reopen_rate_pct": 7.5,
+  "total_escalations": 293,
+  "top_escalation_driver": {
+    "request_type": "Access request",
+    "share_of_tickets_pct": 20.4,
+    "escalation_rate_pct": 31.8,
+    "share_of_escalations_pct": 44.4,
+    "escalation_rate_of_all_other_types_pct": 10.2
+  },
+  "access_theme": {
+    "tickets_filed_as_access_request": 409,
+    "tickets_ai_themed_as_access": 471,
+    "access_tickets_filed_under_other_request_types": 64,
+    "share_of_escalations_pct": 46.8
+  }
+}
