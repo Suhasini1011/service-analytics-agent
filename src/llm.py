@@ -28,6 +28,7 @@ def ask_llm(system_prompt, user_prompt):
     response = client.chat.completions.create(
         model=os.getenv("LLM_MODEL"),
         temperature=0,
+        max_tokens=4096,
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt},

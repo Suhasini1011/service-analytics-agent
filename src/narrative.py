@@ -1,24 +1,29 @@
 import json
+import os
 import pandas as pd
 from clean import clean_tickets
 from kpis import sla_by_priority, time_to_resolve, backlog, ticket_aging, reopen_rate, SLA_TARGET_HOURS
 from categorise import add_themes
 from drivers import escalation_drivers
 from llm import ask_llm
-from grounding import check_grounding, remove_citations
+from grounding import check_grounding, fill_placeholders
 
 SLA_ATTAINMENT_GOAL_PCT = 95
 
 NARRATIVE_PROMPT = """You are a senior IT service analyst writing a short service review for managers.
 You will receive a JSON facts packet. It is your only source of information.
 
-Strict rules:
-- Use only numbers that appear in the facts packet, written exactly as they appear there.
-- Cite every number by putting the path of its fact in square brackets straight after it,
-  for example: 73.4% [sla_attainment_pct_by_priority.P4] or 27 [open_backlog_total] tickets.
-- Do not calculate anything new: no ratios, differences, totals or percentages of your own.
+How to use numbers:
+- Never type a number yourself. Wherever a number belongs, write the path of its fact in double
+  curly brackets and the code will insert the value, for example:
+  P4 attainment was {{sla_attainment_pct_by_priority.P4}}% against a goal of {{sla_attainment_goal_pct}}%.
+- Each placeholder must point to one single fact, never to a whole group.
+- For the data quality sentence, use {{data_quality_notes.0}}, {{data_quality_notes.1}} and so on.
+- P1, P2, P3 and P4 are names of priorities, so you may write them.
+
+Other rules:
+- Do not calculate anything new: no ratios, differences or totals of your own.
 - Do not estimate or promise the impact of any recommendation.
-- Refer to priorities as P1, P2, P3 and P4.
 - Use bullet points starting with "- ". Do not number anything, including findings: refer to them by topic.
 - Judge SLA performance only by sla_attainment_pct. Median and mean hours describe typical speed, not SLA compliance.
 - One finding must cover the access_theme facts, including how many access tickets were filed under other request types.
@@ -93,22 +98,29 @@ if __name__ == "__main__":
     with open("data/facts.json", "w") as f:
         json.dump(facts, f, indent=2)
 
-    problems = None
-    for attempt in range(1, 4):
-        narrative = write_narrative(facts, problems)
-        cited, problems = check_grounding(narrative, facts)
-        print(f"Attempt {attempt}: {cited} cited numbers, {len(problems)} problems")
-        for problem in problems:
-            print("  -", problem)
-        if not problems:
-            break
+    if os.getenv("LLM_PROVIDER") == "offline":
+        print("Offline mode: reusing the last saved narrative instead of calling the AI")
+        with open("data/narrative_template.md") as f:
+            template = f.read()
+        used, problems = check_grounding(template, facts)
+        print(f"Saved narrative: {used} facts used, {len(problems)} problems")
+    else:
+        problems = None
+        for attempt in range(1, 4):
+            template = write_narrative(facts, problems)
+            used, problems = check_grounding(template, facts)
+            print(f"Attempt {attempt}: {used} facts used, {len(problems)} problems")
+            for problem in problems:
+                print("  -", problem)
+            if not problems:
+                break
 
-    with open("data/narrative_cited.md", "w") as f:
-        f.write(narrative)
+    with open("data/narrative_template.md", "w") as f:
+        f.write(template)
     with open("data/narrative.md", "w") as f:
-        f.write(remove_citations(narrative))
+        f.write(fill_placeholders(template, facts))
     with open("data/grounding.json", "w") as f:
-        json.dump({"cited_numbers": cited, "problems": problems}, f, indent=2)
+        json.dump({"cited_numbers": used, "problems": problems}, f, indent=2)
 
     print()
-    print(narrative)
+    print(fill_placeholders(template, facts))
