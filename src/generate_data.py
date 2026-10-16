@@ -41,6 +41,63 @@ PORTAL_ISSUES = {
     ],
 }
 
+text_rng = random.Random(7)
+
+REWORDINGS = {
+    "Need access for my new role": [
+        "Need access for my new role",
+        "Just joined the finance team, can't see the approvals screen yet",
+        "my manager asked me to start using this but I have no access",
+    ],
+    "Please grant approver access": [
+        "Please grant approver access",
+        "Need approver rights so I can sign off my team's claims",
+        "approval button is greyed out for me, I think I need the approver role",
+    ],
+    "Access removed after team move, need it back": [
+        "Access removed after team move, need it back",
+        "Moved departments last week and lost all my permissions",
+        "After my transfer the system says I'm not authorised anymore",
+    ],
+    "Need a new report added to my dashboard": [
+        "Need a new report added to my dashboard",
+        "Can you add the monthly spend report to my home page",
+    ],
+    "Please update my cost centre": [
+        "Please update my cost centre",
+        "My cost centre is wrong, still shows my old team",
+    ],
+    "Can't log in after password reset": [
+        "Can't log in after password reset",
+        "reset my password and now it keeps saying invalid credentials",
+        "Locked out after changing my password this morning",
+    ],
+    "Stuck in a sign-in loop on mobile": [
+        "Stuck in a sign-in loop on mobile",
+        "The app keeps sending me back to the login page on my phone",
+    ],
+    "Page shows an error when I click submit": [
+        "Page shows an error when I click submit",
+        "Getting 'not authorised' error when I try to submit",
+        "submit button gives a 500 error",
+    ],
+    "Report export is failing": [
+        "Report export is failing",
+        "Excel download just spins and never finishes",
+    ],
+    "How do I submit an expense for approval?": [
+        "How do I submit an expense for approval?",
+        "Where is the option to send my claim to my manager?",
+    ],
+    "Where do I find my training history?": [
+        "Where do I find my training history?",
+        "Need a copy of my completed courses for my review",
+    ],
+}
+
+OPENERS = ["", "", "Hi team, ", "Hello, ", "Urgent: "]
+CLOSERS = ["", "", " Please help.", " This is blocking my work.", " Thanks!"]
+
 START_DATE = datetime(2026, 1, 1)
 DAYS_OF_DATA = 180
 END_DATE = START_DATE + timedelta(days=DAYS_OF_DATA)
@@ -61,6 +118,9 @@ def make_ticket(number):
         prefix = "INC"
         request_type = random.choice(list(PORTAL_ISSUES))
         description = random.choice(PORTAL_ISSUES[request_type])
+
+    wording = text_rng.choice(REWORDINGS[description])
+    description = text_rng.choice(OPENERS) + wording + text_rng.choice(CLOSERS)
 
     first = random.choice(FIRST_NAMES)
     last = random.choice(LAST_NAMES)
