@@ -8,18 +8,20 @@ from clean import clean_tickets
 CACHE_FILE = "data/theme_cache.json"
 BATCH_SIZE = 25
 
-THEMES = [
-    "Access and permissions",
-    "Login and authentication",
-    "Errors and bugs",
-    "Reports and data",
-    "How-to and guidance",
-    "Account and profile changes",
-]
+THEMES = {
+    "Access and permissions": "Needs access, a role or permissions granted, restored or changed, including 'not authorised' errors caused by missing permissions.",
+    "Login and authentication": "Cannot sign in: passwords, lockouts, credentials or sign-in loops, on any device.",
+    "Errors and bugs": "Something is broken or failing, such as error messages or failed exports and downloads, and the cause is not missing permissions or signing in.",
+    "Reports and data": "Requests for a new report, dashboard or data to be added. Not errors with existing reports.",
+    "How-to and guidance": "Asks how to do something or where to find something, including finding their own records.",
+    "Account and profile changes": "Requests to update the user's own details, such as cost centre, team or manager.",
+}
+
+THEME_LIST = "\n".join(f"- {name}: {meaning}" for name, meaning in THEMES.items())
 
 SYSTEM_PROMPT = f"""You are an IT service desk analyst.
-Classify each numbered ticket description into exactly one theme from this list:
-{json.dumps(THEMES)}
+Classify each numbered ticket description into exactly one of these themes:
+{THEME_LIST}
 Judge by what the user actually needs, not by the words they use.
 If none fit, use "Other".
 Reply with JSON only, in exactly this format:
